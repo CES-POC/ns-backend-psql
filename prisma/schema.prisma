@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @unique @default(uuid())
+  fullname  String
+  username  String   @unique
+  email     String   @unique
+  empid     String   @unique
+  phone     Int      @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map(name: "user")
+}
+
+model Plantlocation {
+  id                String              @id @default(uuid())
+  plant_name        String
+  location          String
+  floor             String
+  area              String
+  PlantFloorDrawing PlantFloorDrawing[]
+
+  @@map(name: "plantlocation")
+}
+
+model EngineeringObject {
+  id           String @id @default(uuid())
+  name         String
+  type         String
+  displayName  String
+  shape        Int
+  dataformjson String
+
+  @@map(name: "engineering_object")
+}
+
+model PlantFloorDrawing {
+  id                                 String                               @id @default(uuid())
+  plantlocation_id                   String
+  Plantlocation                      Plantlocation                        @relation(fields: [plantlocation_id], references: [id])
+  PlantFloorDrawingEngineeringObject PlantFloorDrawingEngineeringObject[]
+
+  @@map(name: "plant_floor_drawing")
+}
+
+model PlantFloorDrawingEngineeringObject {
+  id                   String            @id @default(uuid())
+  componentjson        String
+  dataFormJsonValues   String
+  PlantFloorDrawing_id String
+  PlantFloorDrawing    PlantFloorDrawing @relation(fields: [PlantFloorDrawing_id], references: [id])
+
+  @@map(name: "plant_floor_drawing_engineering_object")
+}
+
+model PlantFloorDrawingEngineeringObjectHistory {
+  id                 String @id @default(uuid())
+  componentjson      String
+  dataFormJsonValues String
+  updated_by         String
+  updated_at         String
+
+  @@map(name: "plant_floor_drawing_engineering_object_history")
+}
+
+model PlantFloorDrawingArrows {
+  id        String @id @default(uuid())
+  arrowjson String
+
+  @@map(name: "plant_floor_drawing_arrows")
+}
