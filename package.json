@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "set NODE_ENV=dev && nodemon src/index.js",
+    "prisma": "npx prisma migrate dev --name init",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "ajith",
